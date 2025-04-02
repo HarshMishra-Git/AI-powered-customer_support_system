@@ -1,0 +1,348 @@
+{% extends "layout.html" %}
+
+{% block title %}Profile Settings - AI Support System{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <ul class="nav nav-tabs mb-4" id="profileTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="account-tab" data-bs-toggle="tab" data-bs-target="#account-tab-pane" type="button" role="tab" aria-controls="account-tab-pane" aria-selected="true">
+                    <i class="fas fa-user me-2"></i>Account
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="preferences-tab" data-bs-toggle="tab" data-bs-target="#preferences-tab-pane" type="button" role="tab" aria-controls="preferences-tab-pane" aria-selected="false">
+                    <i class="fas fa-cog me-2"></i>Preferences
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="badges-tab" data-bs-toggle="tab" data-bs-target="#badges-tab-pane" type="button" role="tab" aria-controls="badges-tab-pane" aria-selected="false">
+                    <i class="fas fa-award me-2"></i>Badges
+                </button>
+            </li>
+        </ul>
+        
+        <div class="tab-content" id="profileTabsContent">
+            <!-- Account Tab -->
+            <div class="tab-pane fade show active" id="account-tab-pane" role="tabpanel" aria-labelledby="account-tab" tabindex="0">
+                <div class="card shadow">
+                    <div class="card-header bg-primary text-white">
+                        <h4 class="mb-0"><i class="fas fa-user-cog me-2"></i>Profile Settings</h4>
+                    </div>
+                    <div class="card-body">
+                        <form method="POST" action="{{ url_for('profile') }}">
+                            {{ profile_form.hidden_tag() }}
+                            <input type="hidden" name="update_profile" value="1">
+                            
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label for="username" class="form-label">{{ profile_form.username.label }}</label>
+                                    {{ profile_form.username(class="form-control", id="username") }}
+                                    {% for error in profile_form.username.errors %}
+                                        <div class="text-danger">{{ error }}</div>
+                                    {% endfor %}
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="email" class="form-label">{{ profile_form.email.label }}</label>
+                                    {{ profile_form.email(class="form-control", id="email") }}
+                                    {% for error in profile_form.email.errors %}
+                                        <div class="text-danger">{{ error }}</div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="current_password" class="form-label">{{ profile_form.current_password.label }} <span class="text-danger">*</span></label>
+                                {{ profile_form.current_password(class="form-control", id="current_password") }}
+                                <div class="form-text">Required to confirm changes</div>
+                                {% for error in profile_form.current_password.errors %}
+                                    <div class="text-danger">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+                            
+                            <hr>
+                            <h5>Change Password</h5>
+                            <p class="text-muted">Leave blank if you don't want to change your password</p>
+                            
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label for="new_password" class="form-label">{{ profile_form.new_password.label }}</label>
+                                    {{ profile_form.new_password(class="form-control", id="new_password") }}
+                                    <div class="form-text">Password must be at least 8 characters long</div>
+                                    {% for error in profile_form.new_password.errors %}
+                                        <div class="text-danger">{{ error }}</div>
+                                    {% endfor %}
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="confirm_password" class="form-label">{{ profile_form.confirm_password.label }}</label>
+                                    {{ profile_form.confirm_password(class="form-control", id="confirm_password") }}
+                                    {% for error in profile_form.confirm_password.errors %}
+                                        <div class="text-danger">{{ error }}</div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            
+                            <div class="d-grid">
+                                {{ profile_form.submit(class="btn btn-primary") }}
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                
+                <div class="card mt-4">
+                    <div class="card-header bg-info text-white">
+                        <h5 class="mb-0"><i class="fas fa-info-circle me-2"></i>Account Information</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p><strong>Role:</strong> <span class="badge {% if current_user.is_admin() %}bg-danger{% else %}bg-info{% endif %}">{{ current_user.role }}</span></p>
+                                <p><strong>Account Created:</strong> {{ current_user.created_at.strftime('%Y-%m-%d') }}</p>
+                            </div>
+                            <div class="col-md-6">
+                                <p><strong>Total Tickets:</strong> {{ current_user.tickets.count() }}</p>
+                                <p><strong>Experience Points:</strong> {{ current_user.experience_points }}</p>
+                                <p><strong>Level:</strong> {{ current_user.level }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Preferences Tab -->
+            <div class="tab-pane fade" id="preferences-tab-pane" role="tabpanel" aria-labelledby="preferences-tab" tabindex="0">
+                <div class="card shadow">
+                    <div class="card-header bg-success text-white">
+                        <h4 class="mb-0"><i class="fas fa-paint-brush me-2"></i>Appearance Settings</h4>
+                    </div>
+                    <div class="card-body">
+                        <form method="POST" action="{{ url_for('profile') }}">
+                            {{ pref_form.hidden_tag() }}
+                            <input type="hidden" name="save_preferences" value="1">
+                            
+                            <div class="mb-4">
+                                <label class="form-label">{{ pref_form.theme_preference.label }}</label>
+                                <div class="row g-3 mt-2">
+                                    <div class="col-md-6">
+                                        <div class="card h-100 {% if current_user.theme_preference == 'dark' %}border-primary{% endif %} theme-card" id="dark-theme-card">
+                                            <div class="card-body bg-dark text-white">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="radio" name="theme_preference" id="dark-theme" value="dark" {% if current_user.theme_preference == 'dark' %}checked{% endif %}>
+                                                    <label class="form-check-label" for="dark-theme">
+                                                        <i class="fas fa-moon me-2"></i>Dark Theme
+                                                    </label>
+                                                </div>
+                                                <div class="theme-preview mt-3">
+                                                    <div class="fake-navbar bg-dark text-white p-2 rounded">
+                                                        <div class="d-flex">
+                                                            <div class="fake-brand me-2 bg-secondary rounded" style="width: 30px; height: 10px;"></div>
+                                                            <div class="fake-link bg-secondary rounded" style="width: 50px; height: 10px;"></div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="fake-content mt-2 rounded bg-dark-subtle" style="height: 60px;"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="card h-100 {% if current_user.theme_preference == 'light' %}border-primary{% endif %} theme-card" id="light-theme-card">
+                                            <div class="card-body bg-white">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="radio" name="theme_preference" id="light-theme" value="light" {% if current_user.theme_preference == 'light' %}checked{% endif %}>
+                                                    <label class="form-check-label" for="light-theme">
+                                                        <i class="fas fa-sun me-2"></i>Light Theme
+                                                    </label>
+                                                </div>
+                                                <div class="theme-preview mt-3">
+                                                    <div class="fake-navbar bg-light p-2 rounded border">
+                                                        <div class="d-flex">
+                                                            <div class="fake-brand me-2 bg-primary rounded" style="width: 30px; height: 10px;"></div>
+                                                            <div class="fake-link bg-primary rounded" style="width: 50px; height: 10px;"></div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="fake-content mt-2 rounded bg-white border" style="height: 60px;"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% for error in pref_form.theme_preference.errors %}
+                                    <div class="text-danger mt-2">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+                            
+                            <div class="d-grid mt-4">
+                                {{ pref_form.submit(class="btn btn-success") }}
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Badges Tab -->
+            <div class="tab-pane fade" id="badges-tab-pane" role="tabpanel" aria-labelledby="badges-tab" tabindex="0">
+                <div class="card shadow">
+                    <div class="card-header bg-warning text-dark">
+                        <h4 class="mb-0"><i class="fas fa-award me-2"></i>Your Achievements</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="row" id="badges-container">
+                            <div class="col-12 text-center" id="loading-badges">
+                                <div class="spinner-border text-primary" role="status">
+                                    <span class="visually-hidden">Loading...</span>
+                                </div>
+                                <p class="mt-2">Loading badges...</p>
+                            </div>
+                            <div class="col-12 d-none" id="no-badges">
+                                <div class="alert alert-info">
+                                    <i class="fas fa-info-circle me-2"></i>You haven't earned any badges yet. Continue using the system to earn achievements!
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-4">
+                            <h5>Progress to Next Level</h5>
+                            <div class="progress" role="progressbar" aria-label="Level progress">
+                                {% set next_level = current_user.level + 1 %}
+                                {% set required_xp = next_level * 100 %}
+                                {% set current_xp = current_user.experience_points %}
+                                {% set progress_percent = (current_xp / required_xp) * 100 %}
+                                
+                                <div class="progress-bar progress-bar-striped progress-bar-animated" style="width: {{ progress_percent }}%">
+                                    {{ current_xp }}/{{ required_xp }} XP
+                                </div>
+                            </div>
+                            <p class="text-muted mt-2">Level {{ current_user.level }} • {{ required_xp - current_xp }} XP needed for Level {{ next_level }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Theme card selection effect
+document.addEventListener('DOMContentLoaded', function() {
+    const darkThemeCard = document.getElementById('dark-theme-card');
+    const lightThemeCard = document.getElementById('light-theme-card');
+    const darkThemeRadio = document.getElementById('dark-theme');
+    const lightThemeRadio = document.getElementById('light-theme');
+    
+    if (darkThemeCard && lightThemeCard) {
+        darkThemeCard.addEventListener('click', function() {
+            darkThemeRadio.checked = true;
+            darkThemeCard.classList.add('border-primary');
+            lightThemeCard.classList.remove('border-primary');
+        });
+        
+        lightThemeCard.addEventListener('click', function() {
+            lightThemeRadio.checked = true;
+            lightThemeCard.classList.add('border-primary');
+            darkThemeCard.classList.remove('border-primary');
+        });
+    }
+    
+    // Load badges
+    loadUserBadges();
+});
+
+// Load user badges from API
+function loadUserBadges() {
+    const badgesContainer = document.getElementById('badges-container');
+    const loadingBadges = document.getElementById('loading-badges');
+    const noBadges = document.getElementById('no-badges');
+    
+    fetch('/api/user/badges')
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                loadingBadges.classList.add('d-none');
+                
+                if (data.badges && data.badges.length > 0) {
+                    let badgesHTML = '';
+                    
+                    data.badges.forEach(badge => {
+                        badgesHTML += `
+                            <div class="col-md-4 col-sm-6 mb-4">
+                                <div class="card h-100 border-warning">
+                                    <div class="card-body text-center">
+                                        <div class="badge-icon mb-3">
+                                            <i class="${badge.icon || 'fas fa-award'} fa-3x text-warning"></i>
+                                        </div>
+                                        <h5 class="card-title">${badge.name}</h5>
+                                        <p class="card-text text-muted">${badge.description}</p>
+                                        <span class="badge rounded-pill bg-warning text-dark">${badge.category || 'Achievement'}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    });
+                    
+                    // Add badges HTML to container
+                    badgesContainer.innerHTML = badgesHTML;
+                } else {
+                    noBadges.classList.remove('d-none');
+                }
+            } else {
+                loadingBadges.classList.add('d-none');
+                badgesContainer.innerHTML = `
+                    <div class="col-12">
+                        <div class="alert alert-danger">
+                            <i class="fas fa-exclamation-circle me-2"></i>Error loading badges
+                        </div>
+                    </div>
+                `;
+            }
+        })
+        .catch(error => {
+            loadingBadges.classList.add('d-none');
+            badgesContainer.innerHTML = `
+                <div class="col-12">
+                    <div class="alert alert-danger">
+                        <i class="fas fa-exclamation-circle me-2"></i>Error: ${error.message}
+                    </div>
+                </div>
+            `;
+        });
+}
+</script>
+
+<style>
+/* Theme card styling */
+.theme-card {
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border-width: 2px;
+}
+.theme-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+}
+.badge-icon {
+    width: 60px;
+    height: 60px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background-color: rgba(255, 193, 7, 0.1);
+}
+/* Progress bar styling */
+.progress {
+    height: 25px;
+    border-radius: 50px;
+    background-color: #e9ecef;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+}
+.progress-bar {
+    border-radius: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+}
+</style>
+{% endblock %}

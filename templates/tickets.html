@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tickets - AI Support System</title>
+    <link rel="stylesheet" href="https://cdn.replit.com/agent/bootstrap-agent-dark-theme.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/custom.css') }}">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">
+                <i class="fas fa-robot me-2"></i>AI Support System
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/dashboard">Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="/tickets">Tickets</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/chat">Chat</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container mt-4">
+        <!-- Alert Container -->
+        <div id="alert-container"></div>
+        
+        <!-- Tickets Header -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1>Support Tickets</h1>
+            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#new-ticket-modal">
+                <i class="fas fa-plus me-1"></i> New Ticket
+            </button>
+        </div>
+
+        <!-- Filter Buttons -->
+        <div class="mb-4">
+            <div class="btn-group" role="group" aria-label="Ticket filters">
+                <button type="button" class="btn btn-outline-secondary filter-btn active" data-status="all">
+                    All Tickets
+                </button>
+                <button type="button" class="btn btn-outline-info filter-btn" data-status="Open">
+                    <i class="fas fa-ticket-alt me-1"></i> Open
+                </button>
+                <button type="button" class="btn btn-outline-success filter-btn" data-status="Closed">
+                    <i class="fas fa-check-circle me-1"></i> Closed
+                </button>
+                <button type="button" class="btn btn-outline-danger filter-btn" data-status="Escalated">
+                    <i class="fas fa-exclamation-triangle me-1"></i> Escalated
+                </button>
+            </div>
+        </div>
+
+        <!-- Tickets Table -->
+        <div class="card mb-4">
+            <div class="card-header bg-secondary">
+                <i class="fas fa-list me-2"></i> Ticket List
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead>
+                            <tr>
+                                <th>Ticket ID</th>
+                                <th>Category</th>
+                                <th>Priority</th>
+                                <th>Description</th>
+                                <th>Created</th>
+                            </tr>
+                        </thead>
+                        <tbody id="ticket-list">
+                            <tr>
+                                <td colspan="5" class="text-center py-4">
+                                    <div class="spinner-border" role="status">
+                                        <span class="visually-hidden">Loading...</span>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- New Ticket Modal -->
+    <div class="modal fade" id="new-ticket-modal" tabindex="-1" aria-labelledby="new-ticket-modal-label" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="new-ticket-modal-label">Create New Ticket</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="new-ticket-form">
+                        <div class="mb-3">
+                            <label for="new-ticket-description" class="form-label">Description</label>
+                            <textarea class="form-control" id="new-ticket-description" rows="5" required placeholder="Describe the issue in detail..."></textarea>
+                            <div class="form-text">Our AI will automatically categorize your ticket.</div>
+                        </div>
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary">Create Ticket</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Ticket Detail Modal -->
+    <div class="modal fade" id="ticket-detail-modal" tabindex="-1" aria-labelledby="ticket-detail-modal-label" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="ticket-detail-modal-label">Ticket Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- Content will be loaded dynamically -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white py-4 mt-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <p class="mb-0">&copy; 2025 AI Support System</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <p class="mb-0">Powered by AI Multi-Agent Framework</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ url_for('static', filename='js/tickets.js') }}"></script>
+</body>
+</html>

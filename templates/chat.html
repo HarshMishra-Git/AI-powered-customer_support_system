@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Chat - Support System</title>
+    <link rel="stylesheet" href="https://cdn.replit.com/agent/bootstrap-agent-dark-theme.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/custom.css') }}">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">
+                <i class="fas fa-robot me-2"></i>AI Support System
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/dashboard">Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/tickets">Tickets</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="/chat">Chat</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col-md-8 mx-auto">
+                <!-- Chat Interface Card -->
+                <div class="card mb-4">
+                    <div class="card-header bg-primary text-white">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <i class="fas fa-comments me-2"></i> AI Support Chat
+                            </div>
+                            <button class="btn btn-sm btn-outline-light" id="create-ticket-btn">
+                                <i class="fas fa-ticket-alt me-1"></i> Create Support Ticket
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body p-0">
+                        <!-- Chat Messages Container -->
+                        <div id="chat-messages" class="chat-container p-3">
+                            <!-- Messages will be added dynamically by JS -->
+                        </div>
+                        
+                        <!-- Chat Input Form -->
+                        <div class="chat-input p-3 border-top">
+                            <form id="chat-form">
+                                <div class="input-group">
+                                    <input 
+                                        type="text" 
+                                        id="message-input" 
+                                        class="form-control" 
+                                        placeholder="Type your message here..." 
+                                        autocomplete="off"
+                                    >
+                                    <button 
+                                        type="submit" 
+                                        id="send-button" 
+                                        class="btn btn-primary"
+                                    >
+                                        <i class="fas fa-paper-plane"></i>
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Info Card -->
+                <div class="card">
+                    <div class="card-header bg-info text-white">
+                        <i class="fas fa-info-circle me-2"></i> About AI Support Chat
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title">How to use the AI Support Assistant</h5>
+                        <p>Our AI-powered assistant can help with:</p>
+                        <ul>
+                            <li>Answering questions about our products and services</li>
+                            <li>Troubleshooting technical issues</li>
+                            <li>Creating support tickets for complex problems</li>
+                            <li>Providing step-by-step solutions for common issues</li>
+                        </ul>
+                        <p class="mb-0"><strong>Tip:</strong> Be as specific as possible when describing your issue to get the best help.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white py-4 mt-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <p class="mb-0">&copy; 2025 AI Support System</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <p class="mb-0">Powered by AI Multi-Agent Framework</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ url_for('static', filename='js/chat.js') }}"></script>
+</body>
+</html>

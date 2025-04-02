@@ -1,0 +1,221 @@
+{% extends "layout.html" %}
+
+{% block title %}Dashboard - AI Support System{% endblock %}
+
+{% block extra_css %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+{% endblock %}
+
+{% block content %}
+
+    <!-- Main Content -->
+    <div class="container mt-4">
+        <!-- Alert Container -->
+        <div id="alert-container"></div>
+
+        <!-- Dashboard Header -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1>Dashboard</h1>
+            <div>
+                <span class="me-2">Last updated: <span id="last-refreshed">Now</span></span>
+                <button id="refresh-dashboard" class="btn btn-outline-info">
+                    <i class="fas fa-sync-alt me-1"></i> Refresh
+                </button>
+            </div>
+        </div>
+
+        <!-- Ticket Summary Cards -->
+        <div class="row mb-4">
+            <div class="col-md-3">
+                <div class="card bg-info text-white mb-3 dashboard-card">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="card-title">Open Tickets</h6>
+                                <h2 class="mb-0" id="open-tickets">
+                                    <span class="stats-loading">
+                                        <i class="fas fa-spinner fa-spin"></i>
+                                    </span>
+                                    <span class="stats-value">0</span>
+                                </h2>
+                            </div>
+                            <i class="fas fa-ticket-alt fa-2x opacity-50"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card bg-success text-white mb-3 dashboard-card">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="card-title">Closed Tickets</h6>
+                                <h2 class="mb-0" id="closed-tickets">
+                                    <span class="stats-loading">
+                                        <i class="fas fa-spinner fa-spin"></i>
+                                    </span>
+                                    <span class="stats-value">0</span>
+                                </h2>
+                            </div>
+                            <i class="fas fa-check-circle fa-2x opacity-50"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card bg-danger text-white mb-3 dashboard-card">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="card-title">Escalated Tickets</h6>
+                                <h2 class="mb-0" id="escalated-tickets">
+                                    <span class="stats-loading">
+                                        <i class="fas fa-spinner fa-spin"></i>
+                                    </span>
+                                    <span class="stats-value">0</span>
+                                </h2>
+                            </div>
+                            <i class="fas fa-exclamation-triangle fa-2x opacity-50"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card bg-primary text-white mb-3 dashboard-card">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="card-title">Total Tickets</h6>
+                                <h2 class="mb-0" id="total-tickets">
+                                    <span class="stats-loading">
+                                        <i class="fas fa-spinner fa-spin"></i>
+                                    </span>
+                                    <span class="stats-value">0</span>
+                                </h2>
+                            </div>
+                            <i class="fas fa-clipboard-list fa-2x opacity-50"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Charts Row -->
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <div class="card mb-3 h-100 dashboard-card">
+                    <div class="card-header bg-primary text-white">
+                        <i class="fas fa-chart-pie me-2"></i> Ticket Status Distribution
+                    </div>
+                    <div class="card-body">
+                        <div class="stats-loading text-center py-5">
+                            <div class="spinner-border" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                        </div>
+                        <div class="chart-container" style="position: relative; height: 300px;">
+                            <canvas id="ticket-status-chart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card mb-3 h-100 dashboard-card">
+                    <div class="card-header bg-info text-white">
+                        <i class="fas fa-chart-bar me-2"></i> Issues by Category
+                    </div>
+                    <div class="card-body">
+                        <div class="stats-loading text-center py-5">
+                            <div class="spinner-border" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                        </div>
+                        <div class="chart-container" style="position: relative; height: 300px;">
+                            <canvas id="category-chart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Performance Metrics Row -->
+        <div class="row mb-4">
+            <div class="col-md-4">
+                <div class="card mb-3 h-100 dashboard-card">
+                    <div class="card-header bg-success text-white">
+                        <i class="fas fa-clock me-2"></i> Resolution Time
+                    </div>
+                    <div class="card-body text-center">
+                        <div class="stats-loading">
+                            <div class="spinner-border" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                        </div>
+                        <div class="stats-value py-4">
+                            <h6 class="text-muted mb-3">Average Resolution Time</h6>
+                            <h1 class="display-4 mb-0" id="avg-resolution-time">0h</h1>
+                            <p class="text-muted">hours per ticket</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-8">
+                <div class="card mb-3 h-100 dashboard-card">
+                    <div class="card-header bg-warning text-dark">
+                        <i class="fas fa-star me-2"></i> Solution Success Rates
+                    </div>
+                    <div class="card-body">
+                        <div class="stats-loading text-center py-5">
+                            <div class="spinner-border" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                        </div>
+                        <div class="chart-container" style="position: relative; height: 300px;">
+                            <canvas id="success-rate-chart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header bg-secondary">
+                        <i class="fas fa-bolt me-2"></i> Quick Actions
+                    </div>
+                    <div class="card-body">
+                        <div class="row text-center">
+                            <div class="col-md-3">
+                                <a href="/tickets" class="btn btn-info w-100 mb-2">
+                                    <i class="fas fa-ticket-alt me-2"></i> View All Tickets
+                                </a>
+                            </div>
+                            <div class="col-md-3">
+                                <a href="/tickets?status=open" class="btn btn-primary w-100 mb-2">
+                                    <i class="fas fa-inbox me-2"></i> Open Tickets
+                                </a>
+                            </div>
+                            <div class="col-md-3">
+                                <a href="/tickets?status=escalated" class="btn btn-danger w-100 mb-2">
+                                    <i class="fas fa-exclamation-circle me-2"></i> Escalated Tickets
+                                </a>
+                            </div>
+                            <div class="col-md-3">
+                                <a href="/chat" class="btn btn-success w-100 mb-2">
+                                    <i class="fas fa-comments me-2"></i> Start Chat
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+{% endblock %}

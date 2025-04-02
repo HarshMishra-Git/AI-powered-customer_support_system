@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+{% if current_user.is_authenticated and current_user.theme_preference %}
+    {% set theme = current_user.theme_preference %}
+{% else %}
+    {% set theme = 'dark' %}
+{% endif %}
+<html lang="en" data-bs-theme="{{ theme }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>{% block title %}AI Support System{% endblock %}</title>
+    <link rel="stylesheet" href="https://cdn.replit.com/agent/bootstrap-agent-dark-theme.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/custom.css') }}">
+    {% block extra_css %}{% endblock %}
+</head>
+<body class="{% if current_user.is_authenticated %}user-logged-in{% endif %}">
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">
+                <i class="fas fa-robot me-2"></i>AI Support System
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <!-- Home link - always visible -->
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.path == '/' %}active{% endif %}" href="/">Home</a>
+                    </li>
+                    
+                    <!-- Dashboard link - ADMIN ONLY -->
+                    {% if current_user.is_authenticated and current_user.role == 'admin' %}
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.path == '/dashboard' %}active{% endif %}" href="/dashboard">Dashboard</a>
+                    </li>
+                    {% endif %}
+                    
+                    <!-- Tickets link - authenticated users only -->
+                    {% if current_user.is_authenticated %}
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.path == '/tickets' %}active{% endif %}" href="/tickets">Tickets</a>
+                    </li>
+                    {% endif %}
+                    
+                    <!-- Chat link - always visible -->
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.path == '/chat' %}active{% endif %}" href="/chat">Chat</a>
+                    </li>
+                    
+                    <!-- Knowledge Base link - always visible -->
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.path == '/knowledge-base' %}active{% endif %}" href="/knowledge-base">
+                            <i class="fas fa-book me-1"></i>Knowledge Base
+                        </a>
+                    </li>
+                </ul>
+                
+                <!-- Theme Toggle -->
+                <ul class="navbar-nav me-2">
+                    <li class="nav-item">
+                        <button id="theme-toggle" class="btn btn-sm {% if theme == 'dark' %}btn-light{% else %}btn-dark{% endif %} rounded-circle" type="button" title="{% if theme == 'dark' %}Switch to Light Mode{% else %}Switch to Dark Mode{% endif %}">
+                            <i class="fas {% if theme == 'dark' %}fa-sun{% else %}fa-moon{% endif %}"></i>
+                        </button>
+                    </li>
+                </ul>
+                
+                <!-- User menu -->
+                <ul class="navbar-nav">
+                    {% if current_user.is_authenticated %}
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fas fa-user me-1"></i>{{ current_user.username }}
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                                <li><span class="dropdown-item-text text-muted">{{ current_user.email }}</span></li>
+                                <li>
+                                    <span class="dropdown-item-text">
+                                        <span class="badge {% if current_user.role == 'admin' %}bg-danger{% else %}bg-info{% endif %}">
+                                            {{ current_user.role }}
+                                        </span>
+                                    </span>
+                                </li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="{{ url_for('profile') }}"><i class="fas fa-user-cog me-2"></i>Profile Settings</a></li>
+                                <li><a class="dropdown-item" href="{{ url_for('logout') }}"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
+                            </ul>
+                        </li>
+                    {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link {% if request.path == '/login' %}active{% endif %}" href="{{ url_for('login') }}">Login</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {% if request.path == '/register' %}active{% endif %}" href="{{ url_for('register') }}">Register</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container mt-4">
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        
+        {% block content %}{% endblock %}
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white py-4 mt-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <p class="mb-0">&copy; 2025 AI Support System</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <p class="mb-0">Powered by AI Multi-Agent Framework</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ url_for('static', filename='js/theme.js') }}"></script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>

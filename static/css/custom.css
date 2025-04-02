@@ -1,0 +1,227 @@
+/* Custom styles for AI Support System */
+
+/* Theme transition effects */
+html {
+    transition: all 0.3s ease-in-out;
+}
+
+body {
+    transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
+}
+
+/* Emoji reaction styles */
+.emoji-reaction-btn {
+    border-radius: 20px;
+    font-size: 1.1rem;
+    padding: 0.25rem 0.75rem;
+    transition: all 0.2s ease;
+}
+
+.emoji-reaction-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 3px 5px rgba(0,0,0,0.2);
+}
+
+.emoji-reaction-btn.active {
+    background-color: rgba(var(--bs-primary-rgb), 0.2);
+    border-color: var(--bs-primary);
+}
+
+/* Animation for emoji reactions */
+@keyframes emoji-pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+    100% { transform: scale(1); }
+}
+
+.emoji-pulse {
+    animation: emoji-pulse 0.5s ease;
+}
+
+/* Badge styles */
+.badge {
+    transition: all 0.2s ease;
+}
+
+.badge:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Theme toggle button */
+#theme-toggle {
+    width: 38px;
+    height: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+#theme-toggle:hover {
+    transform: rotate(30deg);
+}
+
+/* Card hover effects */
+.card {
+    transition: all 0.2s ease;
+}
+
+.card.hover-effect:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+}
+
+/* Loading animations */
+.loading-spinner {
+    border: 4px solid rgba(0, 0, 0, 0.1);
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border-left-color: var(--bs-primary);
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Ticket status badges */
+.ticket-status {
+    font-weight: bold;
+    padding: 0.35rem 0.75rem;
+    border-radius: 30px;
+}
+
+.ticket-status-open {
+    background-color: rgba(var(--bs-success-rgb), 0.2);
+    color: var(--bs-success);
+}
+
+.ticket-status-pending {
+    background-color: rgba(var(--bs-warning-rgb), 0.2);
+    color: var(--bs-warning);
+}
+
+.ticket-status-closed {
+    background-color: rgba(var(--bs-danger-rgb), 0.2);
+    color: var(--bs-danger);
+}
+
+/* Message bubbles for chat */
+.message-bubble {
+    border-radius: 18px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    position: relative;
+    max-width: 80%;
+}
+
+.message-user {
+    background-color: rgba(var(--bs-primary-rgb), 0.1);
+    border: 1px solid rgba(var(--bs-primary-rgb), 0.2);
+    margin-left: auto;
+    border-bottom-right-radius: 4px;
+}
+
+.message-agent {
+    background-color: rgba(var(--bs-success-rgb), 0.1);
+    border: 1px solid rgba(var(--bs-success-rgb), 0.2);
+    margin-right: auto;
+    border-bottom-left-radius: 4px;
+}
+
+.message-system {
+    background-color: rgba(var(--bs-info-rgb), 0.1);
+    border: 1px solid rgba(var(--bs-info-rgb), 0.2);
+    margin: 1rem auto;
+    max-width: 90%;
+    text-align: center;
+    font-style: italic;
+}
+
+/* Ticket priority indicators */
+.priority-high {
+    color: var(--bs-danger);
+}
+
+.priority-medium {
+    color: var(--bs-warning);
+}
+
+.priority-low {
+    color: var(--bs-success);
+}
+
+/* Animations */
+.fade-in {
+    animation: fadeIn 0.5s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.slide-in {
+    animation: slideIn 0.5s ease;
+}
+
+@keyframes slideIn {
+    from { transform: translateY(20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+/* Make navbar adapt to theme */
+[data-bs-theme="light"] .navbar {
+    background-color: var(--bs-light) !important;
+}
+
+[data-bs-theme="light"] .navbar-dark .navbar-nav .nav-link {
+    color: var(--bs-dark);
+}
+
+[data-bs-theme="light"] .navbar-dark .navbar-brand {
+    color: var(--bs-dark);
+}
+
+[data-bs-theme="light"] .navbar-toggler-icon {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%280, 0, 0, 0.55%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+}
+
+/* Make footer adapt to theme */
+[data-bs-theme="light"] footer.bg-dark {
+    background-color: var(--bs-light) !important;
+    color: var(--bs-dark) !important;
+}
+
+/* Badge and progress styling for gamification */
+.achievement-badge {
+    display: inline-block;
+    margin: 0.5rem;
+    text-align: center;
+}
+
+.achievement-badge .icon {
+    width: 60px;
+    height: 60px;
+    margin: 0 auto;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(255, 193, 7, 0.2);
+    color: #ffc107;
+    font-size: 1.75rem;
+}
+
+.achievement-badge .name {
+    margin-top: 0.5rem;
+    font-weight: bold;
+}
+
+.achievement-badge .description {
+    font-size: 0.85rem;
+    color: var(--bs-secondary);
+}
