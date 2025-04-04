@@ -6,3 +6,4 @@ WTForms
 SQLAlchemy
 Werkzeug
 gunicorn
+requests
