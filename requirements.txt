@@ -8,3 +8,6 @@ Werkzeug
 gunicorn
 requests
 scikit-learn
+pandas
+numpy
+
