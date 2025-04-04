@@ -7,3 +7,4 @@ SQLAlchemy
 Werkzeug
 gunicorn
 requests
+scikit-learn
